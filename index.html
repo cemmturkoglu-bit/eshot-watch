@@ -1,0 +1,842 @@
+c<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESHOT Watch — Tüm Hatlar</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:      #090b0e; --bg2: #0f1318; --bg3: #161c26;
+  --border:  #1a2030; --border2: #253040;
+  --red:     #ff2d2d; --red-dim: #6b1111;
+  --orange:  #ff7a1a; --org-dim: #6b3210;
+  --yellow:  #f0c000; --yel-dim: #5a4800;
+  --green:   #00e676; --blue: #4da6ff; --purple: #b388ff;
+  --text:    #c0cce0; --mid: #6a7a90; --dim: #3a4555;
+  --mono:    'JetBrains Mono', monospace;
+  --sans:    'Inter', sans-serif;
+  --display: 'Bebas Neue', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+
+/* ── NAV ── */
+.nav {
+  display: flex; align-items: center;
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 0 24px; gap: 0; position: sticky; top: 0; z-index: 200; height: 56px;
+}
+.brand {
+  font-family: var(--display); font-size: 24px; letter-spacing: 2px;
+  color: var(--red); text-shadow: 0 0 16px rgba(255,45,45,.35);
+  padding-right: 20px; border-right: 1px solid var(--border); margin-right: 12px;
+}
+.brand small { font-family: var(--mono); font-size: 9px; color: var(--dim); letter-spacing: 3px; display: block; }
+.ntab {
+  padding: 0 16px; height: 56px; display: flex; align-items: center;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  color: var(--mid); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s;
+}
+.ntab:hover { color: var(--text); }
+.ntab.on { color: var(--text); border-bottom-color: var(--red); }
+.nav-r { margin-left: auto; display: flex; align-items: center; gap: 18px; font-family: var(--mono); font-size: 11px; }
+.ldot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 1.6s ease infinite; display: inline-block; margin-right: 6px; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,230,118,.5)} 50%{box-shadow:0 0 0 5px rgba(0,230,118,0)} }
+#clock { color: var(--text); letter-spacing: 2px; }
+
+/* ── STATS ── */
+.stats { display: flex; background: var(--bg2); border-bottom: 2px solid var(--border); overflow-x: auto; }
+.stat { flex: 1; min-width: 120px; padding: 12px 20px; border-right: 1px solid var(--border); }
+.stat:last-child { border-right: none; }
+.slabel { font-family: var(--mono); font-size: 9px; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 3px; }
+.sval { font-family: var(--display); font-size: 28px; line-height: 1; }
+.sval.red    { color: var(--red);    text-shadow: 0 0 10px rgba(255,45,45,.3); }
+.sval.orange { color: var(--orange); }
+.sval.yellow { color: var(--yellow); }
+.sval.blue   { color: var(--blue);   }
+.sval.green  { color: var(--green);  }
+
+/* ── PAGES ── */
+.page { display: none; }
+.page.on { display: block; }
+
+/* ── HAT ARAMA ── */
+.search-hero {
+  padding: 32px 32px 0;
+  background: linear-gradient(180deg, rgba(77,166,255,.04) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+}
+.search-title {
+  font-family: var(--display); font-size: 36px; letter-spacing: 3px;
+  color: var(--text); margin-bottom: 4px;
+}
+.search-sub { font-family: var(--mono); font-size: 11px; color: var(--mid); margin-bottom: 20px; }
+.search-row { display: flex; gap: 10px; max-width: 560px; margin-bottom: 24px; }
+.hat-input {
+  flex: 1; background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 3px; padding: 12px 16px;
+  font-family: var(--mono); font-size: 16px; color: var(--text);
+  outline: none; transition: border-color .2s; letter-spacing: 2px;
+}
+.hat-input:focus { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(77,166,255,.1); }
+.hat-input::placeholder { color: var(--dim); letter-spacing: 1px; }
+.search-btn {
+  padding: 12px 24px; font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+  background: rgba(77,166,255,.1); border: 1px solid #1a3a5a; color: var(--blue);
+  border-radius: 3px; cursor: pointer; transition: all .2s; white-space: nowrap;
+}
+.search-btn:hover { background: rgba(77,166,255,.18); border-color: var(--blue); }
+.add-btn {
+  padding: 12px 20px; font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+  background: rgba(0,230,118,.08); border: 1px solid rgba(0,230,118,.2); color: var(--green);
+  border-radius: 3px; cursor: pointer; transition: all .2s; white-space: nowrap;
+}
+.add-btn:hover { background: rgba(0,230,118,.15); }
+
+/* İzlenen hatlar listesi */
+.lines-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px; background: var(--border); padding: 0;
+  margin: 0;
+}
+.line-card {
+  background: var(--bg2); padding: 18px 22px; cursor: pointer;
+  transition: background .15s; border-bottom: 3px solid transparent;
+}
+.line-card:hover { background: var(--bg3); }
+.line-card.active { border-bottom-color: var(--blue); background: var(--bg3); }
+.lc-no { font-family: var(--display); font-size: 40px; color: var(--text); line-height: 1; }
+.lc-ad { font-size: 11px; color: var(--mid); margin: 2px 0 10px; line-height: 1.4; }
+.lc-stats { display: flex; gap: 12px; }
+.lc-badge {
+  font-family: var(--mono); font-size: 10px; padding: 2px 8px; border-radius: 2px;
+}
+.lc-badge.green  { background: rgba(0,230,118,.1); color: var(--green); }
+.lc-badge.red    { background: rgba(255,45,45,.1); color: var(--red); }
+.lc-badge.orange { background: rgba(255,122,26,.1); color: var(--orange); }
+.lc-badge.blue   { background: rgba(77,166,255,.1); color: var(--blue); }
+
+/* ── HAT DETAY ── */
+.detail-layout { display: grid; grid-template-columns: 1fr 340px; min-height: calc(100vh - 220px); }
+.detail-main { border-right: 1px solid var(--border); overflow-y: auto; }
+.detail-side { background: var(--bg2); overflow-y: auto; }
+
+.phdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 22px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 56px; background: var(--bg); z-index: 10;
+}
+.phdr-t { font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; }
+.ftabs { display: flex; gap: 4px; }
+.ftab {
+  padding: 4px 10px; font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
+  border: 1px solid var(--border2); border-radius: 2px; background: transparent;
+  color: var(--mid); cursor: pointer; transition: all .2s;
+}
+.ftab:hover, .ftab.on { background: var(--border2); color: var(--text); }
+.ftab.on.iptal  { border-color: var(--red);    color: var(--red); }
+.ftab.on.birles { border-color: var(--orange);  color: var(--orange); }
+.ftab.on.erken  { border-color: var(--yellow);  color: var(--yellow); }
+
+/* Violation cards */
+#vlist { padding-bottom: 60px; }
+.vc { display: grid; grid-template-columns: 5px 1fr; border-bottom: 1px solid var(--border); transition: background .15s; animation: fi .25s ease; }
+@keyframes fi { from{opacity:0;transform:translateY(-3px)} to{opacity:1;transform:none} }
+.vc:hover { background: var(--bg2); }
+.vs.critical{background:var(--red)} .vs.high{background:var(--orange)}
+.vs.medium{background:var(--blue)} .vs.warning{background:var(--yellow)}
+.vb { padding: 13px 18px; }
+.vtop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.vtype { display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10px; letter-spacing: 1px; padding: 3px 8px; border-radius: 2px; }
+.vtype.critical{background:rgba(255,45,45,.12);color:var(--red);border:1px solid var(--red-dim)}
+.vtype.high    {background:rgba(255,122,26,.12);color:var(--orange);border:1px solid var(--org-dim)}
+.vtype.medium  {background:rgba(77,166,255,.12);color:var(--blue);border:1px solid #1a3a5a}
+.vtype.warning {background:rgba(240,192,0,.12);color:var(--yellow);border:1px solid var(--yel-dim)}
+.vdt { font-family: var(--mono); font-size: 10px; color: var(--dim); }
+.vdesc { font-size: 12px; color: var(--text); line-height: 1.5; margin-bottom: 8px; }
+.vfoot { display: flex; align-items: center; justify-content: space-between; }
+.varac { font-family: var(--mono); font-size: 11px; color: var(--mid); }
+.varac span { color: var(--blue); }
+.sbtn {
+  display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
+  background: transparent; border: 1px solid var(--red-dim); color: var(--red);
+  border-radius: 2px; cursor: pointer; text-decoration: none; transition: all .2s;
+}
+.sbtn:hover { background: rgba(255,45,45,.1); border-color: var(--red); }
+
+/* Sağ panel */
+.rw { padding: 16px 18px; border-bottom: 1px solid var(--border); }
+.rwt { font-family: var(--mono); font-size: 9px; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+.brow { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 11px; }
+.brow:last-child { border: none; }
+.byon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 2px; font-size: 12px; }
+.byon.g { background: rgba(77,166,255,.12); color: var(--blue); }
+.byon.d { background: rgba(0,230,118,.12); color: var(--green); }
+.bid { color: var(--blue); font-weight: 700; flex: 1; }
+.bhiz.lag { color: var(--red); font-size: 10px; }
+.bhiz.ok  { color: var(--mid); font-size: 10px; }
+.srow { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.srow:last-child { border: none; }
+.ssaat { font-family: var(--display); font-size: 20px; }
+.ssub  { font-family: var(--mono); font-size: 9px; color: var(--mid); letter-spacing: 1px; }
+.pill  { font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 2px; }
+.pill.soon{background:rgba(255,45,45,.15);color:var(--red)}
+.pill.ok  {background:rgba(77,166,255,.12);color:var(--blue)}
+.pill.past{color:var(--dim)}
+
+/* Tarife yok uyarısı */
+.no-sched {
+  margin: 16px; padding: 14px 16px;
+  background: rgba(240,192,0,.06); border: 1px solid var(--yel-dim);
+  border-radius: 3px; font-size: 12px; color: var(--yellow); line-height: 1.6;
+}
+.no-sched a { color: var(--blue); }
+
+/* ── ÖRÜNTÜ & ŞİKAYET ── */
+.pgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap: 1px; background: var(--border); }
+.pcard { background: var(--bg2); padding: 22px 26px; }
+.pct   { font-family: var(--mono); font-size: 9px; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+.bbar  { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.blabel { font-family: var(--mono); font-size: 11px; color: var(--text); min-width: 55px; }
+.btrack { flex: 1; height: 5px; background: var(--border2); border-radius: 1px; overflow: hidden; }
+.bfill  { height: 100%; background: var(--red); border-radius: 1px; transition: width .4s ease; }
+.bval   { font-family: var(--mono); font-size: 10px; color: var(--mid); min-width: 22px; text-align: right; }
+.arow  { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+.arow:last-child { border: none; }
+.aid   { font-family: var(--mono); font-size: 13px; color: var(--blue); font-weight: 700; min-width: 65px; }
+.abadge{ font-family: var(--mono); font-size: 9px; padding: 2px 6px; border-radius: 2px; letter-spacing: 1px; }
+.abadge.i{background:rgba(255,45,45,.12);color:var(--red);border:1px solid var(--red-dim)}
+.abadge.b{background:rgba(255,122,26,.12);color:var(--orange);border:1px solid var(--org-dim)}
+.abadge.e{background:rgba(240,192,0,.12);color:var(--yellow);border:1px solid var(--yel-dim)}
+
+/* Şikayet */
+.clayout { display: grid; grid-template-columns: 1fr 380px; min-height: calc(100vh - 110px); }
+.cleft  { padding: 24px 28px; overflow-y: auto; }
+.cright { background: var(--bg2); border-left: 1px solid var(--border); padding: 24px 22px; overflow-y: auto; }
+.flabel { font-family: var(--mono); font-size: 10px; color: var(--mid); letter-spacing: 2px; display: block; margin-bottom: 6px; }
+.finput, .fsel, .fta {
+  width: 100%; background: var(--bg); border: 1px solid var(--border2); border-radius: 2px;
+  padding: 9px 12px; font-family: var(--mono); font-size: 12px; color: var(--text);
+  outline: none; transition: border-color .2s; margin-bottom: 14px;
+}
+.finput:focus, .fsel:focus, .fta:focus { border-color: var(--blue); }
+.fta { resize: vertical; min-height: 80px; }
+option { background: var(--bg2); }
+.subtn {
+  width: 100%; padding: 11px; font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+  background: rgba(255,45,45,.1); border: 1px solid var(--red-dim); color: var(--red);
+  border-radius: 2px; cursor: pointer; transition: all .2s;
+}
+.subtn:hover { background: rgba(255,45,45,.18); border-color: var(--red); }
+.ccard { border: 1px solid var(--border); border-radius: 2px; padding: 12px 14px; margin-bottom: 10px; border-left: 4px solid var(--mid); }
+.ccard.ariza   { border-left-color: var(--orange); }
+.ccard.surucu  { border-left-color: var(--purple); }
+.ccard.trafik  { border-left-color: var(--blue); }
+.ccard.kabul   { border-left-color: var(--green); }
+.ccard.red_k   { border-left-color: var(--dim); }
+.cctop { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.ccref { font-family: var(--mono); font-size: 10px; color: var(--mid); }
+.cckat { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; padding: 2px 7px; border-radius: 2px; }
+.ccdesc { font-size: 12px; color: var(--text); line-height: 1.5; }
+.boz { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.bitem { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--border2); border-radius: 2px; }
+.bcolor { width: 9px; height: 9px; border-radius: 1px; }
+.bname { font-family: var(--mono); font-size: 10px; color: var(--text); flex: 1; }
+.bcnt  { font-family: var(--display); font-size: 18px; }
+
+/* Empty */
+.empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 40px; text-align: center; }
+.ei { font-size: 40px; margin-bottom: 12px; opacity: .35; }
+.et { font-family: var(--display); font-size: 20px; letter-spacing: 2px; color: var(--mid); margin-bottom: 8px; }
+.es { font-size: 12px; color: var(--dim); line-height: 1.6; }
+
+/* Footer */
+.foot {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 28px;
+  background: var(--bg2); border-top: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 22px;
+  font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: 1px; gap: 18px; z-index: 100;
+}
+.foot a { color: var(--dim); text-decoration: none; }
+.foot a:hover { color: var(--blue); }
+#lupd { color: var(--blue); }
+
+/* Toast */
+.toast {
+  position: fixed; top: 68px; right: 18px;
+  background: var(--bg3); border: 1px solid var(--border2); border-left: 3px solid var(--green);
+  padding: 10px 14px; font-family: var(--mono); font-size: 11px; color: var(--text);
+  border-radius: 2px; transform: translateX(130%); transition: transform .3s ease; z-index: 999;
+}
+.toast.show { transform: translateX(0); }
+
+@media(max-width:800px){
+  .detail-layout,.clayout{grid-template-columns:1fr}
+  .detail-side{border-left:none;border-top:1px solid var(--border)}
+  .cright{border-left:none;border-top:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="brand">ESHOT-WATCH<small>TÜM HATLAR</small></div>
+  <div class="ntab on" onclick="goPage('hatlar',this)">HATLAR</div>
+  <div class="ntab" onclick="goPage('oruntu',this)">ÖRÜNTÜ</div>
+  <div class="ntab" onclick="goPage('sikayet',this)">ŞİKAYET</div>
+  <div class="nav-r">
+    <span><span class="ldot"></span>CANLI</span>
+    <span id="clock">--:--:--</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="slabel">Bugün · Sefer İptali</div><div class="sval red"    id="s-iptal">—</div></div>
+  <div class="stat"><div class="slabel">Bugün · Sefer Birleştirme</div><div class="sval orange" id="s-birles">—</div></div>
+  <div class="stat"><div class="slabel">Bugün · Erken Kalkış</div><div class="sval yellow" id="s-erken">—</div></div>
+  <div class="stat"><div class="slabel">İzlenen Hat</div><div class="sval blue"   id="s-hat">—</div></div>
+  <div class="stat"><div class="slabel">Toplam Araç (Şu An)</div><div class="sval green"  id="s-arac">—</div></div>
+  <div class="stat"><div class="slabel">30 Gün · Toplam İhlal</div><div class="sval red"    id="s-top">—</div></div>
+</div>
+
+<!-- PAGE: HATLAR -->
+<div class="page on" id="page-hatlar">
+
+  <!-- Arama -->
+  <div class="search-hero">
+    <div class="search-title">HAT ARA</div>
+    <div class="search-sub">ESHOT hat numarası gir — anlık izleme ve ihlal tespiti başlar</div>
+    <div class="search-row">
+      <input class="hat-input" type="number" id="hat-input" placeholder="Hat numarası (ör: 684)" min="1" max="999">
+      <button class="search-btn" onclick="searchLine()">▶ GÖRÜNTÜLE</button>
+      <button class="add-btn"    onclick="addLine()">+ İZLEMEYE AL</button>
+    </div>
+  </div>
+
+  <!-- İzlenen hatlar -->
+  <div id="lines-grid" class="lines-grid"></div>
+
+  <!-- Seçili hat detayı -->
+  <div id="line-detail" style="display:none">
+    <div class="detail-layout">
+      <div class="detail-main">
+        <div class="phdr">
+          <div class="phdr-t" id="detail-title">—</div>
+          <div class="ftabs">
+            <button class="ftab on" onclick="setVFilter('all',this)">TÜMÜ</button>
+            <button class="ftab" onclick="setVFilter('SEFERİPTAL',this)">İPTAL</button>
+            <button class="ftab" onclick="setVFilter('SEFERBİRLEŞ',this)">BİRLEŞ</button>
+            <button class="ftab" onclick="setVFilter('ERKENKALKIŞ',this)">ERKEN</button>
+          </div>
+        </div>
+        <div id="vlist"></div>
+      </div>
+      <div class="detail-side">
+        <div class="rw">
+          <div class="rwt">⬡ Şu An Hatta</div>
+          <div id="live-buses"></div>
+        </div>
+        <div class="rw">
+          <div class="rwt">⧖ Yaklaşan Seferler</div>
+          <div id="next-trips"></div>
+        </div>
+        <div id="no-sched-warn" class="no-sched" style="display:none">
+          ⚠ Bu hat için tarife verisi henüz mevcut değil.<br>
+          Sefer iptali/erken kalkış tespiti yapılamıyor.<br>
+          Sadece canlı araç takibi ve GPS lag tespiti aktif.<br><br>
+          Tarife eklemek için:
+          <a href="https://www.eshot.gov.tr" target="_blank">eshot.gov.tr</a>'dan
+          saatleri kopyalayıp
+          <code>data/schedules/{hat_no}.json</code> dosyasına ekle.
+        </div>
+        <div class="rw">
+          <div class="rwt">⚠ Şikayet</div>
+          <div style="font-size:12px;line-height:2;color:var(--mid)">
+            🌐 <a href="https://www.eshot.gov.tr/tr/OneriIstekSikayet/138" target="_blank" style="color:var(--blue)">ESHOT Online</a><br>
+            📞 <span style="color:var(--text);font-family:var(--mono)">0232 320 0 320</span><br>
+            📱 <span style="color:var(--text);font-family:var(--mono)">153</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: ÖRÜNTÜ -->
+<div class="page" id="page-oruntu">
+  <div id="pattern-content">
+    <div class="empty"><div class="ei">📊</div><div class="et">VERİ YÜKLENİYOR</div></div>
+  </div>
+</div>
+
+<!-- PAGE: ŞİKAYET -->
+<div class="page" id="page-sikayet">
+  <div class="clayout">
+    <div class="cleft">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:3px;text-transform:uppercase;margin-bottom:18px">Kaydedilen Yanıtlar</div>
+      <div id="clist"></div>
+    </div>
+    <div class="cright">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:3px;text-transform:uppercase;margin-bottom:18px">Yeni Şikayet Yanıtı</div>
+      <label class="flabel">HAT NO</label>
+      <input class="finput" id="c-hat" type="number" placeholder="684">
+      <label class="flabel">İHLAL TİPİ</label>
+      <select class="fsel" id="c-tip">
+        <option value="SEFERİPTAL">Sefer İptali</option>
+        <option value="SEFERBİRLEŞ">Sefer Birleştirme</option>
+        <option value="ERKENKALKIŞ">Erken Kalkış</option>
+      </select>
+      <label class="flabel">TARİH & SAAT</label>
+      <input class="finput" id="c-tarih" placeholder="YYYY-MM-DD HH:MM">
+      <label class="flabel">ARAÇ ID</label>
+      <input class="finput" id="c-arac" placeholder="OtobusId">
+      <label class="flabel">ESHOT YANIT METNİ</label>
+      <textarea class="fta" id="c-yanit" placeholder="ESHOT'tan gelen yanıtı buraya yapıştır..."></textarea>
+      <button class="subtn" onclick="saveComp()">KAYDET & KATEGORİZE ET</button>
+      <div style="margin-top:20px">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px">BAHANE DAĞILIMI</div>
+        <div id="boz"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <span>ESHOT-WATCH · Açık Kaynak</span>
+  <a href="https://github.com/cemmturkoglu-bit/eshot-watch" target="_blank">github.com/cemmturkoglu-bit/eshot-watch</a>
+  <span>Son güncelleme: <span id="lupd">—</span></span>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GH_USER = 'cemmturkoglu-bit';
+const GH_REPO = 'eshot-watch';
+const RAW     = `https://raw.githubusercontent.com/${GH_USER}/${GH_REPO}/main`;
+
+let allViols    = [];
+let watchedLines = [];
+let linesLatest  = {};
+let schedules    = {};
+let patterns     = null;
+let complaints   = JSON.parse(localStorage.getItem('eshot_comp') || '[]');
+let curLine      = null;
+let curFilter    = 'all';
+
+// ── Utils ───────────────────────────────────────────────────────────────
+function toast(msg, col='var(--green)') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.style.borderLeftColor = col;
+  el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2800);
+}
+function today() { return new Date().toLocaleDateString('sv-SE'); }
+function tipMeta(tip) {
+  return {
+    'SEFERİPTAL':  {label:'🔴 SEFER İPTALİ',     cls:'critical'},
+    'SEFERBİRLEŞ': {label:'🟠 SEFER BİRLEŞTİRME', cls:'high'},
+    'ERKENKALKIŞ': {label:'🟡 ERKEN KALKIŞ',       cls:'warning'},
+    'GPS_LAG':     {label:'🔵 GPS LAG',             cls:'medium'},
+  }[tip] || {label: tip, cls:'warning'};
+}
+
+// ── Sayfa ────────────────────────────────────────────────────────────────
+function goPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(t => t.classList.remove('on'));
+  document.getElementById('page-' + name).classList.add('on');
+  btn.classList.add('on');
+  if (name === 'oruntu')  renderPatterns();
+  if (name === 'sikayet') renderComps();
+}
+
+// ── Hat Arama ────────────────────────────────────────────────────────────
+async function searchLine() {
+  const val = document.getElementById('hat-input').value.trim();
+  if (!val) return;
+  const hat_no = parseInt(val);
+  await showLineDetail(hat_no);
+}
+
+async function addLine() {
+  const val = document.getElementById('hat-input').value.trim();
+  if (!val) { toast('Hat numarası gir!', 'var(--red)'); return; }
+  const hat_no = parseInt(val);
+
+  // GitHub Actions workflow_dispatch tetikle
+  toast(`Hat ${hat_no} izlemeye alınıyor... GitHub Actions'da manuel çalıştır.`, 'var(--yellow)');
+
+  // watched_lines.json'da var mı kontrol et
+  const exists = watchedLines.find(l => l.hat_no === hat_no);
+  if (exists) {
+    toast(`Hat ${hat_no} zaten izleniyor!`, 'var(--green)');
+    showLineDetail(hat_no);
+    return;
+  }
+
+  // Kullanıcıya yönlendirme
+  const url = `https://github.com/${GH_USER}/${GH_REPO}/actions/workflows/collect.yml`;
+  toast(`GitHub Actions'a git, "Run workflow" tıkla, hat_no = ${hat_no} gir.`, 'var(--blue)');
+  setTimeout(() => window.open(url, '_blank'), 1500);
+}
+
+async function showLineDetail(hat_no) {
+  curLine   = hat_no;
+  curFilter = 'all';
+
+  document.getElementById('line-detail').style.display = 'block';
+  document.getElementById('detail-title').textContent = `HAT ${hat_no} — İHLAL KAYITLARI`;
+
+  // Kart highlight
+  document.querySelectorAll('.line-card').forEach(c => c.classList.remove('active'));
+  const card = document.querySelector(`.line-card[data-hat="${hat_no}"]`);
+  if (card) card.classList.add('active');
+
+  renderLineViolations(hat_no);
+  renderLineBuses(hat_no);
+  renderLineTrips(hat_no);
+
+  // Tarife var mı?
+  const sched = schedules[hat_no];
+  const noSchedWarn = document.getElementById('no-sched-warn');
+  if (!sched || !sched.tarife_var) {
+    noSchedWarn.style.display = 'block';
+    noSchedWarn.innerHTML = noSchedWarn.innerHTML.replace('{hat_no}', hat_no);
+  } else {
+    noSchedWarn.style.display = 'none';
+  }
+
+  // Sayfayı detaya kaydır
+  document.getElementById('line-detail').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── Hatta grid ───────────────────────────────────────────────────────────
+function renderLinesGrid() {
+  const el = document.getElementById('lines-grid');
+  if (!watchedLines.length) {
+    el.innerHTML = `<div class="empty" style="grid-column:1/-1">
+      <div class="ei">🚌</div>
+      <div class="et">HAT YOK</div>
+      <div class="es">Yukarıdan hat numarası girerek izlemeye başla.</div>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = watchedLines.map(l => {
+    const latest   = linesLatest[l.hat_no] || {};
+    const arac     = latest.arac_sayisi || 0;
+    const lineViols = allViols.filter(v => v.hat_no === l.hat_no && v.tarih === today());
+    const iptal    = lineViols.filter(v => v.tip === 'SEFERİPTAL').length;
+    const birles   = lineViols.filter(v => v.tip === 'SEFERBİRLEŞ').length;
+
+    return `<div class="line-card" data-hat="${l.hat_no}" onclick="showLineDetail(${l.hat_no})">
+      <div class="lc-no">${l.hat_no}</div>
+      <div class="lc-ad">${l.ad || 'ESHOT Hattı'}</div>
+      <div class="lc-stats">
+        <span class="lc-badge green">${arac} araç</span>
+        ${iptal  ? `<span class="lc-badge red">${iptal} iptal</span>` : ''}
+        ${birles ? `<span class="lc-badge orange">${birles} birleş</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── İhlal Listesi ─────────────────────────────────────────────────────────
+function setVFilter(f, btn) {
+  curFilter = f;
+  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('on','iptal','birles','erken'));
+  btn.classList.add('on');
+  if (f==='SEFERİPTAL') btn.classList.add('iptal');
+  else if (f==='SEFERBİRLEŞ') btn.classList.add('birles');
+  else if (f==='ERKENKALKIŞ') btn.classList.add('erken');
+  if (curLine) renderLineViolations(curLine);
+}
+
+function renderLineViolations(hat_no) {
+  const el = document.getElementById('vlist');
+  let list  = allViols.filter(v => v.hat_no === hat_no);
+  if (curFilter !== 'all') list = list.filter(v => v.tip === curFilter);
+
+  if (!list.length) {
+    el.innerHTML = `<div class="empty">
+      <div class="ei">✅</div><div class="et">KAYIT YOK</div>
+      <div class="es">Hat ${hat_no} için bu kategoride ihlal yok.</div>
+    </div>`; return;
+  }
+
+  el.innerHTML = list.map(v => {
+    const m   = tipMeta(v.tip);
+    const ids = (v.araclar||[]).map(id=>`<span>#${id}</span>`).join(', ') || '—';
+    return `<div class="vc">
+      <div class="vs ${m.cls}"></div>
+      <div class="vb">
+        <div class="vtop">
+          <span class="vtype ${m.cls}">${m.label}</span>
+          <span class="vdt">${v.tarih} · ${v.saat} · ${v.yon||''}</span>
+        </div>
+        <div class="vdesc">${v.aciklama}</div>
+        <div class="vfoot">
+          <span class="varac">Araç: ${ids}</span>
+          <a href="https://www.eshot.gov.tr/tr/OneriIstekSikayet/138" target="_blank" class="sbtn">⚠ ŞİKAYET ET</a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Canlı Araçlar ─────────────────────────────────────────────────────────
+async function renderLineBuses(hat_no) {
+  const el = document.getElementById('live-buses');
+  try {
+    const r  = await fetch(`${RAW}/data/lines/${hat_no}/latest.json?t=` + Date.now());
+    const d  = await r.json();
+    const buses = d.buses_on_route || [];
+    const lag   = d.gps_lag_araclar || [];
+
+    if (!buses.length) { el.innerHTML = '<div style="color:var(--dim);font-family:var(--mono);font-size:11px">Hatta araç yok.</div>'; return; }
+    el.innerHTML = buses.map(b => {
+      const isLag = lag.includes(b.OtobusId);
+      const yon   = b.Yon===1 ? 'g' : 'd';
+      const yonI  = b.Yon===1 ? '→' : '←';
+      return `<div class="brow">
+        <div class="byon ${yon}">${yonI}</div>
+        <div class="bid">#${b.OtobusId}</div>
+        <div class="bhiz ${isLag?'lag':'ok'}">${isLag ? '⚠ GPS LAG' : (b.hiz_kmh != null ? b.hiz_kmh + ' km/h' : '—')}</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<div style="color:var(--dim);font-size:11px;font-family:var(--mono)">Veri yüklenemedi.</div>';
+  }
+}
+
+// ── Yaklaşan Seferler ─────────────────────────────────────────────────────
+function renderLineTrips(hat_no) {
+  const el   = document.getElementById('next-trips');
+  const sched = schedules[hat_no];
+  if (!sched || !sched.tarife_var) {
+    el.innerHTML = '<div style="color:var(--dim);font-size:11px;font-family:var(--mono)">Tarife yok.</div>'; return;
+  }
+
+  const now  = new Date();
+  const isWE = [0,6].includes(now.getDay());
+  const key  = isWE ? 'weekend' : 'weekday';
+  const rows = [];
+
+  for (const [yon, yon_key] of [['Gidiş', 'gidis'], ['Dönüş', 'donus']]) {
+    for (const saat of (sched[yon_key]?.[key] || [])) {
+      const [h,m] = saat.split(':').map(Number);
+      const dt = new Date(); dt.setHours(h,m,0,0);
+      const diff = Math.round((dt-now)/60000);
+      if (diff > -10 && diff < 90) rows.push({saat,yon,diff});
+    }
+  }
+  rows.sort((a,b)=>a.diff-b.diff);
+
+  el.innerHTML = rows.slice(0,8).map(r => {
+    const pill = r.diff < 0
+      ? `<span class="pill past">${Math.abs(r.diff)} dk önce</span>`
+      : r.diff <= 5
+        ? `<span class="pill soon">${r.diff} dk</span>`
+        : `<span class="pill ok">${r.diff} dk</span>`;
+    return `<div class="srow">
+      <div><div class="ssaat">${r.saat}</div><div class="ssub">${r.yon}</div></div>
+      ${pill}
+    </div>`;
+  }).join('') || '<div style="color:var(--dim);font-size:12px;font-family:var(--mono)">Yaklaşan sefer yok.</div>';
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────
+function updateStats() {
+  const td  = today();
+  const tv  = allViols.filter(v => v.tarih === td);
+  document.getElementById('s-iptal').textContent  = tv.filter(v=>v.tip==='SEFERİPTAL').length;
+  document.getElementById('s-birles').textContent = tv.filter(v=>v.tip==='SEFERBİRLEŞ').length;
+  document.getElementById('s-erken').textContent  = tv.filter(v=>v.tip==='ERKENKALKIŞ').length;
+  document.getElementById('s-hat').textContent    = watchedLines.length;
+  document.getElementById('s-top').textContent    = allViols.length;
+
+  const totalArac = Object.values(linesLatest).reduce((s,l) => s + (l.arac_sayisi||0), 0);
+  document.getElementById('s-arac').textContent  = totalArac;
+}
+
+// ── Örüntü ────────────────────────────────────────────────────────────────
+function renderPatterns() {
+  const el = document.getElementById('pattern-content');
+  if (!patterns || !patterns.toplam_ihlal) {
+    el.innerHTML = `<div class="empty"><div class="ei">📊</div><div class="et">YETERLİ VERİ YOK</div><div class="es">En az birkaç gün veri toplandıktan sonra örüntüler görünür.</div></div>`;
+    return;
+  }
+  const tip   = patterns.tip_dagilimi || {};
+  const saatler = patterns.riskli_saatler || [];
+  const araclar = patterns.surekli_ihlalci_araclar || [];
+  const hats    = patterns.hat_dagilimi || {};
+  const maxS    = Math.max(...saatler.map(s=>s.ihlal), 1);
+
+  el.innerHTML = `<div class="pgrid">
+    <div class="pcard">
+      <div class="pct">30 Gün Özet</div>
+      <div style="font-family:var(--display);font-size:48px;color:var(--red);line-height:1">${patterns.toplam_ihlal}</div>
+      <div style="font-size:12px;color:var(--mid);margin-bottom:18px">toplam ihlal</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${Object.entries(tip).map(([k,v])=>{const m=tipMeta(k);return `<div style="padding:5px 10px;background:var(--bg);border:1px solid var(--border2);border-radius:2px"><div style="font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:2px">${k}</div><div style="font-family:var(--display);font-size:20px;color:${m.cls==='critical'?'var(--red)':m.cls==='high'?'var(--orange)':'var(--yellow)'}">${v}</div></div>`;}).join('')}
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pct">Hat Dağılımı</div>
+      ${Object.entries(hats).map(([h,n])=>`<div class="bbar"><div class="blabel">Hat ${h}</div><div class="btrack"><div class="bfill" style="width:${Math.round(n/Math.max(...Object.values(hats),1)*100)}%"></div></div><div class="bval">${n}</div></div>`).join('')}
+    </div>
+    <div class="pcard">
+      <div class="pct">Riskli Saatler</div>
+      ${saatler.map(s=>`<div class="bbar"><div class="blabel">${s.saat}</div><div class="btrack"><div class="bfill" style="width:${Math.round(s.ihlal/maxS*100)}%"></div></div><div class="bval">${s.ihlal}</div></div>`).join('')}
+    </div>
+    <div class="pcard">
+      <div class="pct">Tekrarlayan Araçlar</div>
+      ${araclar.map(a=>`<div class="arow">
+        <div class="aid">#${a.oid}</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          ${a['SEFERİPTAL']?`<span class="abadge i">İPTAL×${a['SEFERİPTAL']}</span>`:''}
+          ${a['SEFERBİRLEŞ']?`<span class="abadge b">BİRLEŞ×${a['SEFERBİRLEŞ']}</span>`:''}
+          ${a['ERKENKALKIŞ']?`<span class="abadge e">ERKEN×${a['ERKENKALKIŞ']}</span>`:''}
+        </div>
+        <div style="font-family:var(--display);font-size:20px;color:var(--red)">${a.toplam||0}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ── Şikayet ───────────────────────────────────────────────────────────────
+const BCOLORS = {ariza:'var(--orange)',surucu:'var(--purple)',trafik:'var(--blue)',kabul:'var(--green)',red_k:'var(--dim)',belirsiz:'var(--mid)'};
+
+function kategorize(t) {
+  t = t.toLowerCase();
+  if (['arıza','teknik','motor','bakım'].some(w=>t.includes(w))) return 'ariza';
+  if (['sürücü','şoför','hasta','sağlık','izin'].some(w=>t.includes(w))) return 'surucu';
+  if (['trafik','yoğunluk','kaza'].some(w=>t.includes(w))) return 'trafik';
+  if (['haklı','uygun','geçerli'].some(w=>t.includes(w))) return 'red_k';
+  if (['haksız','uyarı','tutanak','disiplin'].some(w=>t.includes(w))) return 'kabul';
+  return 'belirsiz';
+}
+
+function saveComp() {
+  const yanit = document.getElementById('c-yanit').value.trim();
+  if (!yanit) { toast('Yanıt metni boş!', 'var(--red)'); return; }
+  const kat = kategorize(yanit);
+  complaints.unshift({
+    id: Date.now(),
+    hat_no:    document.getElementById('c-hat').value,
+    tip:       document.getElementById('c-tip').value,
+    tarih:     document.getElementById('c-tarih').value,
+    arac:      document.getElementById('c-arac').value,
+    yanit,
+    kategori:  kat,
+    giris:     new Date().toISOString(),
+  });
+  localStorage.setItem('eshot_comp', JSON.stringify(complaints));
+  ['c-hat','c-tarih','c-arac','c-yanit'].forEach(id => document.getElementById(id).value='');
+  toast(`Kaydedildi: ${kat.toUpperCase()}`, 'var(--green)');
+  renderComps();
+}
+
+function renderComps() {
+  const el = document.getElementById('clist');
+  el.innerHTML = complaints.length
+    ? complaints.map(c => {
+        const col = BCOLORS[c.kategori] || 'var(--mid)';
+        return `<div class="ccard ${c.kategori}">
+          <div class="cctop">
+            <span class="ccref">Hat ${c.hat_no||'?'} · ${c.tarih||'?'}</span>
+            <span class="cckat" style="background:rgba(255,255,255,.05);color:${col};border:1px solid ${col}">${c.kategori}</span>
+          </div>
+          <div class="ccdesc">${c.yanit.slice(0,180)}${c.yanit.length>180?'…':''}</div>
+        </div>`;
+      }).join('')
+    : `<div class="empty"><div class="ei">📭</div><div class="et">KAYIT YOK</div></div>`;
+
+  const sayac = {};
+  complaints.forEach(c => { sayac[c.kategori] = (sayac[c.kategori]||0)+1; });
+  document.getElementById('boz').innerHTML = `<div class="boz">
+    ${Object.entries(sayac).map(([k,v])=>`<div class="bitem">
+      <div class="bcolor" style="background:${BCOLORS[k]||'var(--mid)'}"></div>
+      <div class="bname">${k}</div>
+      <div class="bcnt" style="color:${BCOLORS[k]||'var(--mid)'}">${v}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ── Veri Yükleme ─────────────────────────────────────────────────────────
+async function fetchJ(url) {
+  const r = await fetch(url + '?t=' + Date.now());
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+async function loadAll() {
+  try {
+    const [viols, latest, pat, wl] = await Promise.allSettled([
+      fetchJ(`${RAW}/data/violations/violations.json`),
+      fetchJ(`${RAW}/data/latest.json`),
+      fetchJ(`${RAW}/data/patterns.json`),
+      fetchJ(`${RAW}/data/watched_lines.json`),
+    ]);
+
+    if (viols.status === 'fulfilled') allViols     = viols.value;
+    if (pat.status   === 'fulfilled') patterns     = pat.value;
+    if (wl.status    === 'fulfilled') {
+      watchedLines = wl.value.lines || [];
+      // Her hat için tarife yükle
+      for (const l of watchedLines) {
+        try {
+          const s = await fetchJ(`${RAW}/data/schedules/${l.hat_no}.json`);
+          schedules[l.hat_no] = s;
+        } catch(e) { schedules[l.hat_no] = null; }
+      }
+    }
+
+    if (latest.status === 'fulfilled') {
+      const d = latest.value;
+      for (const l of (d.lines || [])) {
+        linesLatest[l.hat_no] = l;
+      }
+      const ts = new Date(d.timestamp);
+      document.getElementById('lupd').textContent =
+        ts.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
+    }
+
+    updateStats();
+    renderLinesGrid();
+
+    // Aktif hat varsa güncelle
+    if (curLine) {
+      renderLineViolations(curLine);
+      renderLineBuses(curLine);
+      renderLineTrips(curLine);
+    }
+
+  } catch(err) {
+    console.warn('Yükleme hatası:', err);
+  }
+}
+
+// ── Bootstrap ─────────────────────────────────────────────────────────────
+setInterval(() => {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('tr-TR', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}, 1000);
+
+loadAll();
+setInterval(loadAll, 60000);
+setInterval(() => { if (curLine) { renderLineBuses(curLine); renderLineTrips(curLine); } }, 30000);
+
+// Enter ile arama
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('hat-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') searchLine();
+  });
+});
+</script>
+</body>
+</html>d ~/Desktop/eshot-watch && curl -s "https://raw.githubusercontent.com/cemmturkoglu-bit/eshot-watch/main/setup.sh" | grep -v "^#" | head -1
