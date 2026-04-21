@@ -1,0 +1,12 @@
+{
+  "_aciklama": "İzlenen ESHOT hatları. Buraya yeni hat eklenince sistem otomatik izlemeye başlar.",
+  "lines": [
+    {
+      "hat_no": 684,
+      "ad": "Urla - F.Altay Aktarma Merkezi Ekspres",
+      "active": true,
+      "durak_baslangic_gidis": 50605,
+      "durak_baslangic_donus": 51916
+    }
+  ]
+}

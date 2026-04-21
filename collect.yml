@@ -1,0 +1,50 @@
+name: ESHOT Veri Toplayici
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      hat_no:
+        description: 'Yeni hat ekle (ör: 684)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: pip install requests beautifulsoup4 --quiet
+
+      - name: Yeni Hat Ekle
+        if: ${{ inputs.hat_no != '' }}
+        run: python collector/add_line.py ${{ inputs.hat_no }}
+
+      - name: Tarife Guncelle
+        run: python collector/fetch_schedule.py
+
+      - name: Veri Topla
+        run: python collector/collect.py
+
+      - name: Ihlal Analizi
+        run: python collector/analyze.py
+
+      - name: Push
+        run: |
+          git config user.name "ESHOT-Watch Bot"
+          git config user.email "bot@eshot-watch.github.io"
+          git add data/
+          git diff --staged --quiet && echo "Degisiklik yok." || git commit -m "veri $(date '+%Y-%m-%d %H:%M')" && git push
