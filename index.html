@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESHOT 684 — İhlal Takip</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:        #090b0e;
+  --bg2:       #0f1318;
+  --bg3:       #161c26;
+  --border:    #1a2030;
+  --border2:   #253040;
+  --red:       #ff2d2d;
+  --red-dim:   #6b1111;
+  --orange:    #ff7a1a;
+  --org-dim:   #6b3210;
+  --yellow:    #f0c000;
+  --yel-dim:   #5a4800;
+  --green:     #00e676;
+  --grn-dim:   #0a4a25;
+  --blue:      #4da6ff;
+  --purple:    #b388ff;
+  --text:      #c0cce0;
+  --mid:       #6a7a90;
+  --dim:       #3a4555;
+  --mono:      'JetBrains Mono', monospace;
+  --sans:      'Inter', sans-serif;
+  --display:   'Bebas Neue', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; overflow-x: hidden; }
+
+/* NAV TABS */
+.top-nav {
+  display: flex; align-items: center;
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 0 24px; gap: 0; position: sticky; top: 0; z-index: 200;
+}
+.brand {
+  font-family: var(--display); font-size: 26px; letter-spacing: 2px;
+  color: var(--red); text-shadow: 0 0 18px rgba(255,45,45,.35);
+  padding: 12px 24px 12px 0; border-right: 1px solid var(--border);
+  margin-right: 8px; white-space: nowrap;
+}
+.brand small {
+  font-family: var(--mono); font-size: 9px; color: var(--dim);
+  letter-spacing: 3px; display: block; margin-top: 2px;
+}
+.nav-tab {
+  padding: 0 18px; height: 54px; display: flex; align-items: center;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 2px;
+  color: var(--mid); cursor: pointer; border-bottom: 2px solid transparent;
+  transition: all .2s; user-select: none; white-space: nowrap;
+}
+.nav-tab:hover { color: var(--text); }
+.nav-tab.active { color: var(--text); border-bottom-color: var(--red); }
+.nav-right {
+  margin-left: auto; display: flex; align-items: center; gap: 20px;
+  font-family: var(--mono); font-size: 11px;
+}
+.live-dot {
+  width: 7px; height: 7px; background: var(--green); border-radius: 50%;
+  animation: pulse 1.6s ease-in-out infinite; display: inline-block; margin-right: 6px;
+}
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(0,230,118,.5); }
+  50%      { box-shadow: 0 0 0 5px rgba(0,230,118,0); }
+}
+#clock { color: var(--text); letter-spacing: 2px; }
+
+/* STATS BAR */
+.stats-bar {
+  display: flex; background: var(--bg2); border-bottom: 2px solid var(--border);
+  overflow-x: auto;
+}
+.stat { flex: 1; min-width: 120px; padding: 14px 22px; border-right: 1px solid var(--border); }
+.stat:last-child { border-right: none; }
+.stat-label { font-family: var(--mono); font-size: 9px; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 4px; }
+.stat-value { font-family: var(--display); font-size: 30px; line-height: 1; }
+.stat-value.red    { color: var(--red);    text-shadow: 0 0 10px rgba(255,45,45,.3); }
+.stat-value.orange { color: var(--orange); }
+.stat-value.yellow { color: var(--yellow); }
+.stat-value.blue   { color: var(--blue);   }
+.stat-value.purple { color: var(--purple); }
+
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── PAGE: İHLALLER ───────────────────────── */
+.ihlal-layout {
+  display: grid; grid-template-columns: 1fr 360px;
+  min-height: calc(100vh - 108px);
+}
+.panel { border-right: 1px solid var(--border); overflow-y: auto; }
+.panel-r { overflow-y: auto; background: var(--bg2); }
+
+.panel-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 22px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 54px; background: var(--bg); z-index: 10;
+}
+.phdr-title { font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; }
+.filter-row { display: flex; gap: 4px; }
+.ftab {
+  padding: 4px 10px; font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
+  border: 1px solid var(--border2); border-radius: 2px;
+  background: transparent; color: var(--mid); cursor: pointer; transition: all .2s;
+}
+.ftab:hover, .ftab.on { background: var(--border2); color: var(--text); }
+.ftab.on.iptal  { border-color: var(--red);    color: var(--red); }
+.ftab.on.birles { border-color: var(--orange);  color: var(--orange); }
+.ftab.on.erken  { border-color: var(--yellow);  color: var(--yellow); }
+.ftab.on.trafik { border-color: var(--blue);    color: var(--blue); }
+
+/* Violation cards */
+#viol-list { padding-bottom: 60px; }
+.vcard {
+  display: grid; grid-template-columns: 5px 1fr;
+  border-bottom: 1px solid var(--border); transition: background .15s; cursor: default;
+  animation: fi .25s ease;
+}
+@keyframes fi { from { opacity:0; transform: translateY(-3px); } to { opacity:1; transform:none; } }
+.vcard:hover { background: var(--bg2); }
+.vstripe.critical { background: var(--red); }
+.vstripe.high     { background: var(--orange); }
+.vstripe.medium   { background: var(--blue); }
+.vstripe.warning  { background: var(--yellow); }
+.vbody { padding: 14px 18px; }
+.vtop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+.vtype {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
+  padding: 3px 8px; border-radius: 2px;
+}
+.vtype.critical { background: rgba(255,45,45,.12); color: var(--red);    border: 1px solid var(--red-dim); }
+.vtype.high     { background: rgba(255,122,26,.12); color: var(--orange); border: 1px solid var(--org-dim); }
+.vtype.medium   { background: rgba(77,166,255,.12); color: var(--blue);   border: 1px solid #1a3a5a; }
+.vtype.warning  { background: rgba(240,192,0,.12);  color: var(--yellow); border: 1px solid var(--yel-dim); }
+.vdt { font-family: var(--mono); font-size: 10px; color: var(--dim); }
+.vdesc { font-size: 12px; color: var(--text); line-height: 1.5; margin-bottom: 9px; }
+.vfoot { display: flex; align-items: center; justify-content: space-between; }
+.varac { font-family: var(--mono); font-size: 11px; color: var(--mid); }
+.varac span { color: var(--blue); }
+.vtrafik-badge {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1px;
+  padding: 2px 7px; border-radius: 2px;
+  background: rgba(77,166,255,.12); color: var(--blue); border: 1px solid #1a3a5a;
+}
+.sikayet-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px; font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
+  background: transparent; border: 1px solid var(--red-dim);
+  color: var(--red); border-radius: 2px; cursor: pointer; text-decoration: none; transition: all .2s;
+}
+.sikayet-btn:hover { background: rgba(255,45,45,.1); border-color: var(--red); box-shadow: 0 0 10px rgba(255,45,45,.2); }
+
+/* Sağ panel widgets */
+.rwidget { padding: 18px 20px; border-bottom: 1px solid var(--border); }
+.rwtitle { font-family: var(--mono); font-size: 9px; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; }
+.bus-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 11px; }
+.bus-row:last-child { border: none; }
+.byon { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 2px; font-size: 12px; }
+.byon.g { background: rgba(77,166,255,.12); color: var(--blue); }
+.byon.d { background: rgba(0,230,118,.12); color: var(--green); }
+.bid { color: var(--blue); font-weight: 700; flex: 1; }
+.bhiz { font-size: 10px; }
+.bhiz.lag { color: var(--red); }
+.bhiz.normal { color: var(--mid); }
+.sefer-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.sefer-row:last-child { border: none; }
+.sefer-saat { font-family: var(--display); font-size: 20px; }
+.sefer-sub { font-family: var(--mono); font-size: 9px; color: var(--mid); letter-spacing: 1px; }
+.pill { font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 2px; }
+.pill.soon { background: rgba(255,45,45,.15); color: var(--red); }
+.pill.ok   { background: rgba(77,166,255,.12); color: var(--blue); }
+.pill.past { color: var(--dim); }
+
+/* ── PAGE: ÖRÜNTÜLER ───────────────────────── */
+.pattern-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1px; background: var(--border); padding: 0;
+}
+.pcard { background: var(--bg2); padding: 24px 28px; }
+.pcard-title { font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 18px; }
+.pcard-big { font-family: var(--display); font-size: 48px; color: var(--red); line-height: 1; margin-bottom: 4px; }
+.pcard-sub { font-size: 12px; color: var(--mid); }
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.bar-label { font-family: var(--mono); font-size: 11px; color: var(--text); min-width: 55px; }
+.bar-track { flex: 1; height: 6px; background: var(--border2); border-radius: 1px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 1px; background: var(--red); transition: width .4s ease; }
+.bar-val { font-family: var(--mono); font-size: 10px; color: var(--mid); min-width: 24px; text-align: right; }
+.arac-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.arac-row:last-child { border: none; }
+.arac-id { font-family: var(--mono); font-size: 13px; color: var(--blue); font-weight: 700; min-width: 70px; }
+.arac-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+.abadge { font-family: var(--mono); font-size: 9px; padding: 2px 6px; border-radius: 2px; letter-spacing: 1px; }
+.abadge.iptal  { background: rgba(255,45,45,.12); color: var(--red);    border: 1px solid var(--red-dim); }
+.abadge.birles { background: rgba(255,122,26,.12); color: var(--orange); border: 1px solid var(--org-dim); }
+.abadge.erken  { background: rgba(240,192,0,.12);  color: var(--yellow); border: 1px solid var(--yel-dim); }
+.gun-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.gun-cell { aspect-ratio: 1; border-radius: 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.gun-name { font-family: var(--mono); font-size: 8px; color: var(--mid); }
+.gun-val  { font-family: var(--display); font-size: 18px; }
+
+/* ── PAGE: ŞİKAYETLER ─────────────────────── */
+.complaint-layout { display: grid; grid-template-columns: 1fr 400px; min-height: calc(100vh - 108px); }
+.comp-left, .comp-right { padding: 24px 28px; }
+.comp-right { background: var(--bg2); border-left: 1px solid var(--border); }
+.form-title { font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; }
+.form-group { margin-bottom: 16px; }
+.form-label { font-family: var(--mono); font-size: 10px; color: var(--mid); letter-spacing: 2px; display: block; margin-bottom: 6px; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; background: var(--bg); border: 1px solid var(--border2); border-radius: 2px;
+  padding: 9px 12px; font-family: var(--mono); font-size: 12px; color: var(--text);
+  outline: none; transition: border-color .2s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--blue); }
+.form-textarea { resize: vertical; min-height: 90px; }
+.form-select { cursor: pointer; }
+option { background: var(--bg2); }
+.submit-btn {
+  width: 100%; padding: 12px; font-family: var(--mono); font-size: 12px; letter-spacing: 2px;
+  background: rgba(255,45,45,.1); border: 1px solid var(--red-dim); color: var(--red);
+  border-radius: 2px; cursor: pointer; transition: all .2s;
+}
+.submit-btn:hover { background: rgba(255,45,45,.18); border-color: var(--red); }
+.comp-card { border: 1px solid var(--border); border-left: 4px solid; border-radius: 2px; padding: 14px 16px; margin-bottom: 12px; }
+.comp-card.arıza  { border-left-color: var(--orange); }
+.comp-card.sürücü { border-left-color: var(--purple); }
+.comp-card.trafik { border-left-color: var(--blue); }
+.comp-card.kabul  { border-left-color: var(--green); }
+.comp-card.red    { border-left-color: var(--dim); }
+.comp-card.belirsiz { border-left-color: var(--mid); }
+.cc-top { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.cc-ref { font-family: var(--mono); font-size: 10px; color: var(--mid); }
+.cc-kat {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1px;
+  padding: 2px 7px; border-radius: 2px; text-transform: uppercase;
+}
+.cc-desc { font-size: 12px; color: var(--text); line-height: 1.5; }
+
+/* Bahane özeti donut */
+.bahane-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.bahane-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--border2); border-radius: 2px; }
+.bahane-color { width: 10px; height: 10px; border-radius: 1px; }
+.bahane-name { font-family: var(--mono); font-size: 10px; color: var(--text); flex: 1; }
+.bahane-cnt { font-family: var(--display); font-size: 18px; }
+
+/* EMPTY STATE */
+.empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 40px; text-align: center; }
+.empty-icon { font-size: 44px; margin-bottom: 14px; opacity: .35; }
+.empty-t { font-family: var(--display); font-size: 22px; letter-spacing: 2px; color: var(--mid); margin-bottom: 8px; }
+.empty-s { font-size: 12px; color: var(--dim); line-height: 1.6; }
+
+/* INPUT SEARCH */
+.search-input {
+  width: 100%; background: var(--bg); border: 1px solid var(--border2); border-radius: 2px;
+  padding: 8px 12px; font-family: var(--mono); font-size: 12px; color: var(--text);
+  outline: none; transition: border-color .2s; margin-bottom: 12px;
+}
+.search-input:focus { border-color: var(--blue); }
+
+/* FOOTER */
+.footer {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 30px;
+  background: var(--bg2); border-top: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 24px;
+  font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: 1px; gap: 20px; z-index: 100;
+}
+.footer a { color: var(--dim); text-decoration: none; transition: color .2s; }
+.footer a:hover { color: var(--blue); }
+#lupd { color: var(--blue); }
+
+/* TOAST */
+.toast {
+  position: fixed; top: 70px; right: 20px;
+  background: var(--bg3); border: 1px solid var(--border2); border-left: 3px solid var(--green);
+  padding: 10px 16px; font-family: var(--mono); font-size: 11px; color: var(--text);
+  border-radius: 2px; transform: translateX(130%); transition: transform .3s ease; z-index: 999;
+}
+.toast.show { transform: translateX(0); }
+
+@media (max-width: 800px) {
+  .ihlal-layout, .complaint-layout { grid-template-columns: 1fr; }
+  .panel { border-right: none; border-bottom: 1px solid var(--border); }
+  .comp-right { border-left: none; border-top: 1px solid var(--border); }
+  .pattern-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ TOP NAV ══════════════════════════════════════════════════════════ -->
+<div class="top-nav">
+  <div class="brand">ESHOT-WATCH<small>HAT 684 · İHLAL TAKİP</small></div>
+  <div class="nav-tab active" onclick="goPage('ihlaller', this)">İHLALLER</div>
+  <div class="nav-tab" onclick="goPage('oruntu', this)">HAFTALIK ÖRÜNTÜ</div>
+  <div class="nav-tab" onclick="goPage('sikayet', this)">ŞİKAYET TAKİP</div>
+  <div class="nav-right">
+    <span><span class="live-dot"></span>CANLI</span>
+    <span id="clock">--:--:--</span>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat"><div class="stat-label">Bugün · Sefer İptali</div><div class="stat-value red"    id="s-iptal">—</div></div>
+  <div class="stat"><div class="stat-label">Bugün · Sefer Birleştirme</div><div class="stat-value orange" id="s-birles">—</div></div>
+  <div class="stat"><div class="stat-label">Bugün · Erken Kalkış</div><div class="stat-value yellow" id="s-erken">—</div></div>
+  <div class="stat"><div class="stat-label">Şu An Hatta</div><div class="stat-value blue"   id="s-arac">—</div></div>
+  <div class="stat"><div class="stat-label">GPS Lag (Donmuş Konum)</div><div class="stat-value purple" id="s-lag">—</div></div>
+  <div class="stat"><div class="stat-label">30 Gün · Toplam İhlal</div><div class="stat-value red"    id="s-top">—</div></div>
+</div>
+
+<!-- ═══ PAGE: İHLALLER ════════════════════════════════════════════════════ -->
+<div class="page active" id="page-ihlaller">
+  <div class="ihlal-layout">
+
+    <!-- Sol: İhlal listesi -->
+    <div class="panel">
+      <div class="panel-hdr">
+        <div class="phdr-title">İhlal Kayıtları</div>
+        <div class="filter-row">
+          <button class="ftab on" onclick="setFilter('all',this)">TÜMÜ</button>
+          <button class="ftab" onclick="setFilter('SEFERİPTAL',this)">İPTAL</button>
+          <button class="ftab" onclick="setFilter('SEFERBİRLEŞ',this)">BİRLEŞ</button>
+          <button class="ftab" onclick="setFilter('ERKENKALKIŞ',this)">ERKEN</button>
+          <button class="ftab" onclick="setFilter('TRAFIK',this)">TRAFİK</button>
+        </div>
+      </div>
+      <div id="viol-list"></div>
+    </div>
+
+    <!-- Sağ: Canlı bilgi -->
+    <div class="panel-r">
+
+      <div class="rwidget">
+        <div class="rwtitle">⬡ Şu An Hatta</div>
+        <div id="live-buses"></div>
+      </div>
+
+      <div class="rwidget">
+        <div class="rwtitle">⧖ Yaklaşan Seferler</div>
+        <div id="next-trips"></div>
+      </div>
+
+      <div class="rwidget">
+        <div class="rwtitle">⊕ Araç ID Sorgula</div>
+        <input class="search-input" type="number" id="arac-srch" placeholder="OtobusId gir (ör: 1234)" oninput="searchArac(this.value)">
+        <div id="arac-result"></div>
+      </div>
+
+      <div class="rwidget">
+        <div class="rwtitle">⚠ Şikayet Kanalları</div>
+        <div style="font-size:12px;line-height:2;color:var(--mid)">
+          🌐 <a href="https://www.eshot.gov.tr/tr/OneriIstekSikayet/138" target="_blank" style="color:var(--blue)">ESHOT Online Şikayet</a><br>
+          📞 Alo ESHOT: <span style="color:var(--text);font-family:var(--mono)">0232 320 0 320</span><br>
+          📱 Vatandaş Hattı: <span style="color:var(--text);font-family:var(--mono)">153</span>
+        </div>
+        <div style="margin-top:12px;padding:10px;background:var(--bg);border:1px solid var(--border2);font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.9">
+          Şikayette belirt:<br>
+          ✓ Hat: <span style="color:var(--text)">684</span> · Tarih/Saat · Araç ID · İhlal türü
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: ÖRÜNTÜ ══════════════════════════════════════════════════════ -->
+<div class="page" id="page-oruntu">
+  <div id="pattern-content">
+    <div class="empty"><div class="empty-icon">📊</div><div class="empty-t">VERİ YÜKLENİYOR</div></div>
+  </div>
+</div>
+
+<!-- ═══ PAGE: ŞİKAYET ════════════════════════════════════════════════════ -->
+<div class="page" id="page-sikayet">
+  <div class="complaint-layout">
+
+    <!-- Sol: geçmiş -->
+    <div class="comp-left">
+      <div class="form-title">Kaydedilen Şikayet Yanıtları</div>
+      <div id="comp-list"></div>
+    </div>
+
+    <!-- Sağ: yeni giriş formu -->
+    <div class="comp-right">
+      <div class="form-title">Yeni Şikayet Yanıtı Gir</div>
+      <div class="form-group">
+        <label class="form-label">REFERANS NO</label>
+        <input class="form-input" id="c-ref" placeholder="ESHOT referans numarası">
+      </div>
+      <div class="form-group">
+        <label class="form-label">İHLAL TİPİ</label>
+        <select class="form-select" id="c-tip">
+          <option value="SEFERİPTAL">Sefer İptali</option>
+          <option value="SEFERBİRLEŞ">Sefer Birleştirme</option>
+          <option value="ERKENKALKIŞ">Erken Kalkış</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">İHLAL TARİHİ & SAATİ</label>
+        <input class="form-input" id="c-tarih" placeholder="YYYY-MM-DD HH:MM">
+      </div>
+      <div class="form-group">
+        <label class="form-label">YÖN</label>
+        <select class="form-select" id="c-yon">
+          <option value="urla_faltay">Urla → F.Altay</option>
+          <option value="faltay_urla">F.Altay → Urla</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ARAÇ ID (varsa)</label>
+        <input class="form-input" id="c-arac" placeholder="OtobusId">
+      </div>
+      <div class="form-group">
+        <label class="form-label">ESHOT'UN YANIT METNİ</label>
+        <textarea class="form-textarea" id="c-yanit" placeholder="ESHOT'tan gelen yanıtı buraya yapıştır..."></textarea>
+      </div>
+      <button class="submit-btn" onclick="saveComplaint()">KAYDET & KATEGORİZE ET</button>
+
+      <div style="margin-top:24px;">
+        <div class="form-title">Bahane Dağılımı</div>
+        <div id="bahane-ozet"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>ESHOT-WATCH · Açık Kaynak</span>
+  <a href="https://github.com/videolukarikatur/eshot-watch" target="_blank">github.com/videolukarikatur/eshot-watch</a>
+  <span>Son güncelleme: <span id="lupd">—</span></span>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══ JAVASCRIPT ════════════════════════════════════════════════════════ -->
+<script>
+const GITHUB_USER = 'videolukarikatur';
+const GITHUB_REPO = 'eshot-watch';
+const RAW = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main`;
+
+let allViolations = [], allBuses = [], schedule = null, patterns = null;
+let complaints = JSON.parse(localStorage.getItem('eshot_complaints') || '[]');
+let curFilter = 'all';
+
+// ── Utils ────────────────────────────────────────────────────────────────
+function toast(msg, color='var(--green)') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.style.borderLeftColor = color;
+  el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function today() {
+  return new Date().toLocaleDateString('sv-SE');
+}
+
+function tipMeta(tip) {
+  return {
+    'SEFERİPTAL':  { label:'🔴 SEFER İPTALİ',      cls:'critical' },
+    'SEFERBİRLEŞ': { label:'🟠 SEFER BİRLEŞTİRME',  cls:'high'     },
+    'ERKENKALKIŞ': { label:'🟡 ERKEN KALKIŞ',        cls:'warning'  },
+  }[tip] || { label: tip, cls:'warning' };
+}
+
+function yonTxt(y) {
+  return y === 'urla_faltay' ? 'Urla→FAlt' : 'FAlt→Urla';
+}
+
+// ── Sayfa Geçişi ─────────────────────────────────────────────────────────
+function goPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'oruntu') renderPatterns();
+  if (name === 'sikayet') renderComplaints();
+}
+
+// ── İhlal Render ─────────────────────────────────────────────────────────
+function setFilter(f, btn) {
+  curFilter = f;
+  document.querySelectorAll('.ftab').forEach(t => {
+    t.classList.remove('on','iptal','birles','erken','trafik');
+  });
+  btn.classList.add('on');
+  if (f==='SEFERİPTAL') btn.classList.add('iptal');
+  else if (f==='SEFERBİRLEŞ') btn.classList.add('birles');
+  else if (f==='ERKENKALKIŞ') btn.classList.add('erken');
+  else if (f==='TRAFIK') btn.classList.add('trafik');
+  renderViolations();
+}
+
+function renderViolations() {
+  const el = document.getElementById('viol-list');
+  let list = curFilter === 'all'
+    ? allViolations
+    : curFilter === 'TRAFIK'
+      ? allViolations.filter(v => v.tip==='SEFERBİRLEŞ' && v.trafik_skoru >= 2)
+      : allViolations.filter(v => v.tip === curFilter);
+
+  if (!list.length) {
+    el.innerHTML = `<div class="empty">
+      <div class="empty-icon">✅</div>
+      <div class="empty-t">KAYIT YOK</div>
+      <div class="empty-s">Bu kategoride ihlal tespit edilmedi.</div></div>`;
+    return;
+  }
+
+  el.innerHTML = list.map(v => {
+    const m    = tipMeta(v.tip);
+    const aIds = (v.araclar||[]).map(id=>`<span>#${id}</span>`).join(', ') || '—';
+    const trafikBadge = v.trafik_skoru >= 2
+      ? `<span class="vtrafik-badge">TRAFİK SKORU: ${v.trafik_skoru}</span>`
+      : '';
+    const sikayetTag = v.sikayet_sonucu
+      ? `<span class="vtrafik-badge" style="border-color:var(--green);color:var(--green)">YANIT: ${v.sikayet_sonucu.toUpperCase()}</span>`
+      : '';
+
+    return `<div class="vcard">
+      <div class="vstripe ${m.cls}"></div>
+      <div class="vbody">
+        <div class="vtop">
+          <span class="vtype ${m.cls}">${m.label}</span>
+          <span class="vdt">${v.tarih} · ${v.saat} · ${yonTxt(v.yon)}</span>
+        </div>
+        <div class="vdesc">${v.aciklama}</div>
+        <div class="vfoot">
+          <div style="display:flex;gap:6px;align-items:center">
+            <span class="varac">Araç: ${aIds}</span>
+            ${trafikBadge} ${sikayetTag}
+          </div>
+          <a href="https://www.eshot.gov.tr/tr/OneriIstekSikayet/138" target="_blank" class="sikayet-btn">⚠ ŞİKAYET ET</a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────
+function updateStats() {
+  const td = today();
+  const tv = allViolations.filter(v => v.tarih === td);
+  document.getElementById('s-iptal').textContent  = tv.filter(v=>v.tip==='SEFERİPTAL').length;
+  document.getElementById('s-birles').textContent = tv.filter(v=>v.tip==='SEFERBİRLEŞ').length;
+  document.getElementById('s-erken').textContent  = tv.filter(v=>v.tip==='ERKENKALKIŞ').length;
+  document.getElementById('s-arac').textContent   = allBuses.length;
+  document.getElementById('s-top').textContent    = allViolations.length;
+}
+
+// ── Canlı Araçlar ─────────────────────────────────────────────────────────
+function renderBuses(latest) {
+  allBuses = latest.buses_on_route || [];
+  const lag = latest.gps_lag_araclar || [];
+  document.getElementById('s-lag').textContent = lag.length;
+
+  const el = document.getElementById('live-buses');
+  if (!allBuses.length) {
+    el.innerHTML = '<div style="color:var(--dim);font-family:var(--mono);font-size:11px">Hatta araç yok.</div>';
+    return;
+  }
+  el.innerHTML = allBuses.map(b => {
+    const isLag = lag.includes(b.OtobusId);
+    const yon   = b.Yon===1 ? 'g' : 'd';
+    const yonIc = b.Yon===1 ? '→' : '←';
+    const hiz   = b.hiz_kmh != null ? b.hiz_kmh + ' km/h' : '—';
+    return `<div class="bus-row">
+      <div class="byon ${yon}">${yonIc}</div>
+      <div class="bid">#${b.OtobusId}</div>
+      <div class="bhiz ${isLag?'lag':'normal'}">${isLag ? '⚠ GPS LAG' : hiz}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Yaklaşan Seferler ─────────────────────────────────────────────────────
+function renderNextTrips() {
+  if (!schedule) return;
+  const now = new Date();
+  const isWE = [0,6].includes(now.getDay());
+  const key  = isWE ? 'weekend' : 'weekday';
+  const rows = [];
+
+  for (const yon of ['urla_faltay','faltay_urla']) {
+    for (const saat of (schedule[yon]?.[key] || [])) {
+      const [h,m] = saat.split(':').map(Number);
+      const dt = new Date(); dt.setHours(h,m,0,0);
+      const diff = Math.round((dt-now)/60000);
+      if (diff > -10 && diff < 90) rows.push({saat,yon,diff});
+    }
+  }
+  rows.sort((a,b)=>a.diff-b.diff);
+
+  const el = document.getElementById('next-trips');
+  el.innerHTML = rows.slice(0,8).map(r => {
+    let pill = r.diff < 0
+      ? `<span class="pill past">${Math.abs(r.diff)} dk önce</span>`
+      : r.diff <= 5
+        ? `<span class="pill soon">${r.diff} dk</span>`
+        : `<span class="pill ok">${r.diff} dk</span>`;
+    return `<div class="sefer-row">
+      <div><div class="sefer-saat">${r.saat}</div><div class="sefer-sub">${yonTxt(r.yon)}</div></div>
+      ${pill}
+    </div>`;
+  }).join('') || '<div style="color:var(--dim);font-size:12px;font-family:var(--mono)">Sefer yok.</div>';
+}
+
+// ── Araç Arama ────────────────────────────────────────────────────────────
+function searchArac(val) {
+  const el = document.getElementById('arac-result');
+  if (!val || val.length < 3) { el.innerHTML=''; return; }
+  const id = parseInt(val);
+  const hits = allViolations.filter(v => (v.araclar||[]).includes(id));
+  if (!hits.length) { el.innerHTML='<div style="color:var(--dim);font-size:11px;font-family:var(--mono)">Bu araç için kayıt yok.</div>'; return; }
+
+  el.innerHTML = `<div style="color:var(--blue);font-family:var(--mono);font-size:11px;margin-bottom:8px">Araç #${id} — ${hits.length} ihlal</div>`
+    + hits.map(v => {
+      const m = tipMeta(v.tip);
+      const col = m.cls==='critical'?'var(--red)':m.cls==='high'?'var(--orange)':'var(--yellow)';
+      return `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:10px">
+        <span style="color:var(--text)">${v.tarih} ${v.saat}</span>
+        <span style="color:${col}">${v.tip}</span>
+      </div>`;
+    }).join('');
+}
+
+// ── Örüntü Paneli ─────────────────────────────────────────────────────────
+function renderPatterns() {
+  const el = document.getElementById('pattern-content');
+  if (!patterns) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📊</div>
+      <div class="empty-t">HENÜZ YETERLİ VERİ YOK</div>
+      <div class="empty-s">Sistem en az 1 hafta veri topladıktan sonra<br>haftalık örüntüler burada görünecek.</div></div>`;
+    return;
+  }
+
+  const tip = patterns.tip_dagilimi || {};
+  const saatler = patterns.riskli_saatler || [];
+  const araclar = patterns.surekli_ihlalci_araclar || [];
+  const gunler  = patterns.gun_dagilimi || {};
+  const maxSaat = saatler.length ? Math.max(...saatler.map(s=>s.ihlal)) : 1;
+  const GUN_TR  = {Monday:'PAZ',Tuesday:'SAL',Wednesday:'ÇAR',Thursday:'PER',Friday:'CUM',Saturday:'CMT',Sunday:'PAZ'};
+  const GUN_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+  el.innerHTML = `<div class="pattern-grid">
+
+    <!-- Genel Özet -->
+    <div class="pcard">
+      <div class="pcard-title">30 Gün Özet</div>
+      <div class="pcard-big">${patterns.toplam_ihlal||0}</div>
+      <div class="pcard-sub">toplam ihlal kaydı</div>
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+        ${Object.entries(tip).map(([k,v])=>{
+          const m=tipMeta(k);
+          return `<div style="padding:6px 12px;background:var(--bg);border:1px solid var(--border2);border-radius:2px">
+            <div style="font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:2px">${k}</div>
+            <div style="font-family:var(--display);font-size:22px;color:${m.cls==='critical'?'var(--red)':m.cls==='high'?'var(--orange)':'var(--yellow)'}">${v}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- Riskli Saatler -->
+    <div class="pcard">
+      <div class="pcard-title">En Riskli Sefer Saatleri</div>
+      ${saatler.map(s=>`
+        <div class="bar-row">
+          <div class="bar-label">${s.saat}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${Math.round(s.ihlal/maxSaat*100)}%"></div></div>
+          <div class="bar-val">${s.ihlal}</div>
+        </div>`).join('')}
+    </div>
+
+    <!-- Tekrarlayan Araçlar -->
+    <div class="pcard">
+      <div class="pcard-title">Tekrarlayan İhlalci Araçlar</div>
+      ${araclar.map(a=>`
+        <div class="arac-row">
+          <div class="arac-id">#${a.oid}</div>
+          <div class="arac-badges">
+            ${a['SEFERİPTAL']  ? `<span class="abadge iptal">İPTAL×${a['SEFERİPTAL']}</span>` : ''}
+            ${a['SEFERBİRLEŞ'] ? `<span class="abadge birles">BİRLEŞ×${a['SEFERBİRLEŞ']}</span>` : ''}
+            ${a['ERKENKALKIŞ'] ? `<span class="abadge erken">ERKEN×${a['ERKENKALKIŞ']}</span>` : ''}
+          </div>
+          <div style="font-family:var(--display);font-size:20px;color:var(--red)">${a.toplam||0}</div>
+        </div>`).join('')}
+    </div>
+
+    <!-- Gün Dağılımı -->
+    <div class="pcard">
+      <div class="pcard-title">Günlere Göre İhlal Dağılımı</div>
+      <div class="gun-grid">
+        ${GUN_ORDER.map(g=>{
+          const val = gunler[g]||0;
+          const maxG = Math.max(...Object.values(gunler),1);
+          const int = Math.round(val/maxG*100);
+          return `<div class="gun-cell" style="background:rgba(255,45,45,${0.05+int/100*0.4})">
+            <div class="gun-name">${GUN_TR[g]}</div>
+            <div class="gun-val" style="color:${val>0?'var(--red)':'var(--dim)'}">${val}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+  </div>`;
+}
+
+// ── Şikayet Takip ────────────────────────────────────────────────────────
+const BAHANE_COLORS = {
+  arıza:'var(--orange)', sürücü:'var(--purple)', trafik:'var(--blue)',
+  kabul:'var(--green)', red:'var(--dim)', belirsiz:'var(--mid)'
+};
+
+function kategorize(yanit) {
+  const t = yanit.toLowerCase();
+  const keys = {
+    arıza:  ['arıza','arızalı','teknik','motor','bakım'],
+    sürücü: ['sürücü','şoför','hasta','sağlık','izin','istirahat'],
+    trafik: ['trafik','yoğunluk','kaza','yol'],
+    red:    ['haklı','uygun','mevzuat','geçerli','makul'],
+    kabul:  ['haksız','uyarı','tutanak','soruşturma','disiplin'],
+  };
+  for (const [k,ws] of Object.entries(keys))
+    if (ws.some(w=>t.includes(w))) return k;
+  return 'belirsiz';
+}
+
+function saveComplaint() {
+  const ref    = document.getElementById('c-ref').value.trim();
+  const tip    = document.getElementById('c-tip').value;
+  const tarih  = document.getElementById('c-tarih').value.trim();
+  const yon    = document.getElementById('c-yon').value;
+  const arac   = document.getElementById('c-arac').value.trim();
+  const yanit  = document.getElementById('c-yanit').value.trim();
+
+  if (!yanit) { toast('Yanıt metni boş olamaz!', 'var(--red)'); return; }
+
+  const kat = kategorize(yanit);
+  const entry = {
+    id: Date.now(),
+    referans_no:  ref,
+    ihlal_tip:    tip,
+    ihlal_tarih:  tarih,
+    ihlal_yon:    yon,
+    arac_id:      arac,
+    yanit_metni:  yanit,
+    kategori:     kat,
+    giris_tarihi: new Date().toISOString(),
+  };
+
+  complaints.unshift(entry);
+  localStorage.setItem('eshot_complaints', JSON.stringify(complaints));
+
+  // Formu temizle
+  ['c-ref','c-tarih','c-arac','c-yanit'].forEach(id=>document.getElementById(id).value='');
+
+  toast(`Kaydedildi. Kategori: ${kat.toUpperCase()}`, 'var(--green)');
+  renderComplaints();
+}
+
+function renderComplaints() {
+  const el = document.getElementById('comp-list');
+  if (!complaints.length) {
+    el.innerHTML = `<div class="empty">
+      <div class="empty-icon">📭</div>
+      <div class="empty-t">KAYIT YOK</div>
+      <div class="empty-s">Henüz şikayet yanıtı girilmedi.<br>Sağ formu kullanarak ESHOT yanıtlarını kaydet.</div></div>`;
+  } else {
+    el.innerHTML = complaints.map(c => {
+      const col = BAHANE_COLORS[c.kategori] || 'var(--mid)';
+      return `<div class="comp-card ${c.kategori}">
+        <div class="cc-top">
+          <span class="cc-ref">Ref: ${c.referans_no||'—'} · ${c.ihlal_tarih||'?'} · ${yonTxt(c.ihlal_yon||'')}</span>
+          <span class="cc-kat" style="background:rgba(255,255,255,.05);color:${col};border:1px solid ${col}">${c.kategori.toUpperCase()}</span>
+        </div>
+        <div class="cc-desc">${c.yanit_metni.slice(0,200)}${c.yanit_metni.length>200?'…':''}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Bahane özeti
+  const sayac = {};
+  complaints.forEach(c => { sayac[c.kategori] = (sayac[c.kategori]||0) + 1; });
+  const ozEl = document.getElementById('bahane-ozet');
+  ozEl.innerHTML = `<div class="bahane-grid">
+    ${Object.entries(sayac).map(([k,v])=>`
+      <div class="bahane-item">
+        <div class="bahane-color" style="background:${BAHANE_COLORS[k]||'var(--mid)'}"></div>
+        <div class="bahane-name">${k}</div>
+        <div class="bahane-cnt" style="color:${BAHANE_COLORS[k]||'var(--mid)'}">${v}</div>
+      </div>`).join('')}
+  </div>`;
+}
+
+// ── Veri Yükleme ─────────────────────────────────────────────────────────
+async function fetchJ(url) {
+  const r = await fetch(url + '?t=' + Date.now());
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+async function loadAll() {
+  try {
+    const [viols, latest, sched, pat] = await Promise.allSettled([
+      fetchJ(`${RAW}/data/violations/violations.json`),
+      fetchJ(`${RAW}/data/latest.json`),
+      fetchJ(`${RAW}/data/schedule.json`),
+      fetchJ(`${RAW}/data/patterns.json`),
+    ]);
+
+    if (viols.status === 'fulfilled')   allViolations = viols.value;
+    if (sched.status === 'fulfilled')   schedule      = sched.value;
+    if (pat.status   === 'fulfilled')   patterns      = pat.value;
+
+    if (latest.status === 'fulfilled') {
+      renderBuses(latest.value);
+      const ts = new Date(latest.value.timestamp);
+      document.getElementById('lupd').textContent =
+        ts.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'});
+    }
+
+    updateStats();
+    renderViolations();
+    renderNextTrips();
+
+  } catch (err) {
+    console.warn('Veri yüklenemedi:', err);
+  }
+}
+
+// ── Bootstrap ─────────────────────────────────────────────────────────────
+setInterval(() => {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+}, 1000);
+
+loadAll();
+setInterval(loadAll, 60000);
+setInterval(renderNextTrips, 30000);
+</script>
+</body>
+</html>
