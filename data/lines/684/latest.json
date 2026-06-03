@@ -1,23 +1,53 @@
 {
   "hat_no": 684,
-  "timestamp": "2026-06-03T01:31:15.119456+03:00",
-  "timestamp_unix": 1780439475,
+  "timestamp": "2026-06-03T08:19:03.846421+03:00",
+  "timestamp_unix": 1780463943,
   "buses_on_route": [
     {
-      "OtobusId": 22121,
-      "Yon": 1,
-      "KoorY": "27,06233167",
-      "KoorX": "38,40451167",
+      "OtobusId": 9011,
+      "Yon": 0,
+      "KoorY": "26,87087",
+      "KoorX": "38,36897667",
       "hareket_metre": null,
       "hiz_kmh": null,
       "gps_lag": false,
       "trafik_kume": 0
     },
     {
-      "OtobusId": 22121,
+      "OtobusId": 9059,
       "Yon": 1,
-      "KoorY": "27,06190333",
-      "KoorX": "38,40433667",
+      "KoorY": "26,753865",
+      "KoorX": "38,32228167",
+      "hareket_metre": null,
+      "hiz_kmh": null,
+      "gps_lag": false,
+      "trafik_kume": 0
+    },
+    {
+      "OtobusId": 9071,
+      "Yon": 0,
+      "KoorY": "26,75862",
+      "KoorX": "38,321",
+      "hareket_metre": null,
+      "hiz_kmh": null,
+      "gps_lag": false,
+      "trafik_kume": 0
+    },
+    {
+      "OtobusId": 11039,
+      "Yon": 1,
+      "KoorY": "26,87158667",
+      "KoorX": "38,365265",
+      "hareket_metre": null,
+      "hiz_kmh": null,
+      "gps_lag": false,
+      "trafik_kume": 0
+    },
+    {
+      "OtobusId": 30013,
+      "Yon": 1,
+      "KoorY": "27,065865",
+      "KoorX": "38,398425",
       "hareket_metre": null,
       "hiz_kmh": null,
       "gps_lag": false,
@@ -25,7 +55,96 @@
     }
   ],
   "approaching": {
-    "baslangic_gidis": [],
+    "baslangic_gidis": [
+      {
+        "KalanDurakSayisi": 6,
+        "HattinYonu": 2,
+        "KoorY": "26,759845",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,32117167",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 9202
+      },
+      {
+        "KalanDurakSayisi": 6,
+        "HattinYonu": 2,
+        "KoorY": "26,75979",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,32116667",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 9201
+      },
+      {
+        "KalanDurakSayisi": 6,
+        "HattinYonu": 2,
+        "KoorY": "26,759845",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,32117167",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 9200
+      },
+      {
+        "KalanDurakSayisi": 6,
+        "HattinYonu": 2,
+        "KoorY": "26,75862",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,321",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 9071
+      },
+      {
+        "KalanDurakSayisi": 16,
+        "HattinYonu": 2,
+        "KoorY": "26,875175",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,37009833",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 9587
+      },
+      {
+        "KalanDurakSayisi": 16,
+        "HattinYonu": 2,
+        "KoorY": "26,87087",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,36897667",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 9011
+      },
+      {
+        "KalanDurakSayisi": 16,
+        "HattinYonu": 2,
+        "KoorY": "26,875175",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,37009833",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 9557
+      },
+      {
+        "KalanDurakSayisi": 16,
+        "HattinYonu": 2,
+        "KoorY": "26,99754667",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,397805",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 9566
+      }
+    ],
     "baslangic_donus": []
   },
   "gps_lag_araclar": [],
