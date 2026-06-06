@@ -1,13 +1,13 @@
 {
   "hat_no": 684,
-  "timestamp": "2026-06-06T05:42:14.238473+03:00",
-  "timestamp_unix": 1780713734,
+  "timestamp": "2026-06-06T21:56:56.138274+03:00",
+  "timestamp_unix": 1780772216,
   "buses_on_route": [
     {
-      "OtobusId": 9010,
+      "OtobusId": 30002,
       "Yon": 0,
-      "KoorY": "27,06661167",
-      "KoorX": "38,39821",
+      "KoorY": "27,07045",
+      "KoorX": "38,40281333",
       "hareket_metre": null,
       "hiz_kmh": null,
       "gps_lag": false,
@@ -19,46 +19,46 @@
       {
         "KalanDurakSayisi": 16,
         "HattinYonu": 2,
-        "KoorY": "27,06661167",
+        "KoorY": "27,07045",
         "BisikletAparatliMi": false,
-        "KoorX": "38,39821",
+        "KoorX": "38,40281333",
         "EngelliMi": false,
         "HatNumarasi": 684,
         "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9010
+        "OtobusId": 30002
       },
       {
         "KalanDurakSayisi": 16,
         "HattinYonu": 2,
-        "KoorY": "27,06661",
+        "KoorY": "27,07045",
         "BisikletAparatliMi": false,
-        "KoorX": "38,39820833",
+        "KoorX": "38,40281333",
         "EngelliMi": false,
         "HatNumarasi": 684,
         "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9584
+        "OtobusId": 30104
       },
       {
         "KalanDurakSayisi": 16,
         "HattinYonu": 2,
-        "KoorY": "27,06661",
+        "KoorY": "27,07045",
         "BisikletAparatliMi": false,
-        "KoorX": "38,39820833",
+        "KoorX": "38,40281333",
         "EngelliMi": false,
         "HatNumarasi": 684,
         "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9582
+        "OtobusId": 30105
       },
       {
         "KalanDurakSayisi": 16,
         "HattinYonu": 2,
-        "KoorY": "27,06661167",
+        "KoorY": "27,07044833",
         "BisikletAparatliMi": false,
-        "KoorX": "38,39821",
+        "KoorX": "38,40281",
         "EngelliMi": false,
         "HatNumarasi": 684,
         "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9581
+        "OtobusId": 30106
       }
     ],
     "baslangic_donus": []
