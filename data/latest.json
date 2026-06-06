@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-06-06T02:55:27.610670+03:00",
+  "timestamp": "2026-06-06T05:42:14.239149+03:00",
   "lines": [
     {
       "hat_no": 684,
       "ad": "Urla - F.Altay Ekspres",
-      "arac_sayisi": 0,
-      "timestamp": "2026-06-06T02:55:27.610209+03:00",
+      "arac_sayisi": 1,
+      "timestamp": "2026-06-06T05:42:14.238473+03:00",
       "gps_lag": 0
     }
   ]
