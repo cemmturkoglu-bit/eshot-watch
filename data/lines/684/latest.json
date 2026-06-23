@@ -1,10 +1,159 @@
 {
   "hat_no": 684,
-  "timestamp": "2026-06-23T03:18:15.218904+03:00",
-  "timestamp_unix": 1782173895,
-  "buses_on_route": [],
+  "timestamp": "2026-06-23T07:33:46.365519+03:00",
+  "timestamp_unix": 1782189226,
+  "buses_on_route": [
+    {
+      "OtobusId": 9010,
+      "Yon": 1,
+      "KoorY": "26,75516167",
+      "KoorX": "38,32669833",
+      "hareket_metre": null,
+      "hiz_kmh": null,
+      "gps_lag": false,
+      "trafik_kume": 0
+    },
+    {
+      "OtobusId": 9052,
+      "Yon": 0,
+      "KoorY": "26,77635667",
+      "KoorX": "38,33919833",
+      "hareket_metre": null,
+      "hiz_kmh": null,
+      "gps_lag": false,
+      "trafik_kume": 0
+    },
+    {
+      "OtobusId": 9026,
+      "Yon": 1,
+      "KoorY": "27,06266167",
+      "KoorX": "38,40414833",
+      "hareket_metre": null,
+      "hiz_kmh": null,
+      "gps_lag": false,
+      "trafik_kume": 0
+    },
+    {
+      "OtobusId": 9026,
+      "Yon": 1,
+      "KoorY": "26,76654",
+      "KoorX": "38,32767167",
+      "hareket_metre": null,
+      "hiz_kmh": null,
+      "gps_lag": false,
+      "trafik_kume": 0
+    },
+    {
+      "OtobusId": 9052,
+      "Yon": 0,
+      "KoorY": "27,06390167",
+      "KoorX": "38,40488667",
+      "hareket_metre": null,
+      "hiz_kmh": null,
+      "gps_lag": false,
+      "trafik_kume": 0
+    },
+    {
+      "OtobusId": 9071,
+      "Yon": 1,
+      "KoorY": "26,98732",
+      "KoorX": "38,39628",
+      "hareket_metre": null,
+      "hiz_kmh": null,
+      "gps_lag": false,
+      "trafik_kume": 0
+    },
+    {
+      "OtobusId": 30005,
+      "Yon": 0,
+      "KoorY": "27,05766333",
+      "KoorX": "38,396975",
+      "hareket_metre": null,
+      "hiz_kmh": null,
+      "gps_lag": false,
+      "trafik_kume": 0
+    }
+  ],
   "approaching": {
-    "baslangic_gidis": [],
+    "baslangic_gidis": [
+      {
+        "KalanDurakSayisi": 12,
+        "HattinYonu": 2,
+        "KoorY": "26,80930667",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,35536",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 9564
+      },
+      {
+        "KalanDurakSayisi": 12,
+        "HattinYonu": 2,
+        "KoorY": "26,80930667",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,35536",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 9565
+      },
+      {
+        "KalanDurakSayisi": 12,
+        "HattinYonu": 2,
+        "KoorY": "26,80930667",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,35536",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 9563
+      },
+      {
+        "KalanDurakSayisi": 12,
+        "HattinYonu": 2,
+        "KoorY": "26,77635667",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,33919833",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 9052
+      },
+      {
+        "KalanDurakSayisi": 16,
+        "HattinYonu": 2,
+        "KoorY": "27,06673",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,39868333",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 31111
+      },
+      {
+        "KalanDurakSayisi": 16,
+        "HattinYonu": 2,
+        "KoorY": "27,05766333",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,396975",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 30005
+      },
+      {
+        "KalanDurakSayisi": 16,
+        "HattinYonu": 2,
+        "KoorY": "27,06673",
+        "BisikletAparatliMi": false,
+        "KoorX": "38,39868333",
+        "EngelliMi": false,
+        "HatNumarasi": 684,
+        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
+        "OtobusId": 31112
+      }
+    ],
     "baslangic_donus": []
   },
   "gps_lag_araclar": [],
