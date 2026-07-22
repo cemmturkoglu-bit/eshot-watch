@@ -1,23 +1,23 @@
 {
   "hat_no": 684,
-  "timestamp": "2026-07-22T22:02:37.692656+03:00",
-  "timestamp_unix": 1784746957,
+  "timestamp": "2026-07-22T23:18:03.626453+03:00",
+  "timestamp_unix": 1784751483,
   "buses_on_route": [
     {
-      "OtobusId": 9012,
+      "OtobusId": 11229,
       "Yon": 1,
-      "KoorY": "26,99994833",
-      "KoorX": "38,39767833",
+      "KoorY": "27,062785",
+      "KoorX": "38,40469167",
       "hareket_metre": null,
       "hiz_kmh": null,
       "gps_lag": false,
       "trafik_kume": 0
     },
     {
-      "OtobusId": 9012,
+      "OtobusId": 11229,
       "Yon": 1,
-      "KoorY": "0",
-      "KoorX": "0",
+      "KoorY": "27,06201333",
+      "KoorX": "38,40435333",
       "hareket_metre": null,
       "hiz_kmh": null,
       "gps_lag": false,
