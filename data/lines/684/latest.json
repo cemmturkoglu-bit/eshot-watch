@@ -1,76 +1,10 @@
 {
   "hat_no": 684,
-  "timestamp": "2026-08-09T05:37:45.008922+03:00",
-  "timestamp_unix": 1786243065,
-  "buses_on_route": [
-    {
-      "OtobusId": 9052,
-      "Yon": 0,
-      "KoorY": "27,06629667",
-      "KoorX": "38,39859833",
-      "hareket_metre": null,
-      "hiz_kmh": null,
-      "gps_lag": false,
-      "trafik_kume": 0
-    },
-    {
-      "OtobusId": 9052,
-      "Yon": 0,
-      "KoorY": "27,06390167",
-      "KoorX": "38,40488667",
-      "hareket_metre": null,
-      "hiz_kmh": null,
-      "gps_lag": false,
-      "trafik_kume": 0
-    }
-  ],
+  "timestamp": "2026-08-09T10:59:09.673551+03:00",
+  "timestamp_unix": 1786262349,
+  "buses_on_route": [],
   "approaching": {
-    "baslangic_gidis": [
-      {
-        "KalanDurakSayisi": 16,
-        "HattinYonu": 2,
-        "KoorY": "27,06629667",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,39859833",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9052
-      },
-      {
-        "KalanDurakSayisi": 16,
-        "HattinYonu": 2,
-        "KoorY": "27,06629833",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,398595",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9563
-      },
-      {
-        "KalanDurakSayisi": 16,
-        "HattinYonu": 2,
-        "KoorY": "27,06629833",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,398595",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9564
-      },
-      {
-        "KalanDurakSayisi": 16,
-        "HattinYonu": 2,
-        "KoorY": "27,06629833",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,398595",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9565
-      }
-    ],
+    "baslangic_gidis": [],
     "baslangic_donus": []
   },
   "gps_lag_araclar": [],
