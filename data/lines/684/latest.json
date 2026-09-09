@@ -1,8 +1,19 @@
 {
   "hat_no": 684,
-  "timestamp": "2026-09-09T22:58:01.995720+03:00",
-  "timestamp_unix": 1788983881,
-  "buses_on_route": [],
+  "timestamp": "2026-09-10T01:21:44.727373+03:00",
+  "timestamp_unix": 1788992504,
+  "buses_on_route": [
+    {
+      "OtobusId": 12551,
+      "Yon": 1,
+      "KoorY": "27,06363333",
+      "KoorX": "38,40455833",
+      "hareket_metre": null,
+      "hiz_kmh": null,
+      "gps_lag": false,
+      "trafik_kume": 0
+    }
+  ],
   "approaching": {
     "baslangic_gidis": [],
     "baslangic_donus": []
