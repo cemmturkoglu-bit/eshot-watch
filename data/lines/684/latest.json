@@ -1,77 +1,10 @@
 {
   "hat_no": 684,
-  "timestamp": "2026-09-20T21:23:52.123828+03:00",
-  "timestamp_unix": 1789928632,
-  "buses_on_route": [
-    {
-      "OtobusId": 9056,
-      "Yon": 0,
-      "KoorY": "26,75382167",
-      "KoorX": "38,322505",
-      "hareket_metre": null,
-      "hiz_kmh": null,
-      "gps_lag": false,
-      "trafik_kume": 0
-    }
-  ],
+  "timestamp": "2026-09-20T23:57:39.338223+03:00",
+  "timestamp_unix": 1789937859,
+  "buses_on_route": [],
   "approaching": {
-    "baslangic_gidis": [
-      {
-        "KalanDurakSayisi": 4,
-        "HattinYonu": 2,
-        "KoorY": "26,75382167",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,322505",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9568
-      },
-      {
-        "KalanDurakSayisi": 4,
-        "HattinYonu": 2,
-        "KoorY": "26,753825",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,32250667",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9585
-      },
-      {
-        "KalanDurakSayisi": 4,
-        "HattinYonu": 2,
-        "KoorY": "26,75382167",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,322505",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9056
-      },
-      {
-        "KalanDurakSayisi": 15,
-        "HattinYonu": 2,
-        "KoorY": "26,868625",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,36925833",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9509
-      },
-      {
-        "KalanDurakSayisi": 15,
-        "HattinYonu": 2,
-        "KoorY": "26,875575",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,37562",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9009
-      }
-    ],
+    "baslangic_gidis": [],
     "baslangic_donus": []
   },
   "gps_lag_araclar": [],
