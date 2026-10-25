@@ -1,53 +1,33 @@
 {
   "hat_no": 684,
-  "timestamp": "2026-10-25T07:35:04.996378+03:00",
-  "timestamp_unix": 1792902904,
+  "timestamp": "2026-10-25T12:22:15.744481+03:00",
+  "timestamp_unix": 1792920135,
   "buses_on_route": [
     {
-      "OtobusId": 9052,
-      "Yon": 0,
-      "KoorY": "26,90343667",
-      "KoorX": "38,370775",
-      "hareket_metre": null,
-      "hiz_kmh": null,
-      "gps_lag": false,
-      "trafik_kume": 0
-    },
-    {
-      "OtobusId": 9052,
-      "Yon": 0,
-      "KoorY": "27,06390167",
-      "KoorX": "38,40488667",
-      "hareket_metre": null,
-      "hiz_kmh": null,
-      "gps_lag": false,
-      "trafik_kume": 0
-    },
-    {
-      "OtobusId": 9071,
+      "OtobusId": 14012,
       "Yon": 1,
-      "KoorY": "26,7551",
-      "KoorX": "38,32662167",
+      "KoorY": "27,062745",
+      "KoorX": "38,40466833",
       "hareket_metre": null,
       "hiz_kmh": null,
       "gps_lag": false,
       "trafik_kume": 0
     },
     {
-      "OtobusId": 30001,
+      "OtobusId": 30013,
       "Yon": 1,
-      "KoorY": "26,76902833",
-      "KoorX": "38,33515167",
+      "KoorY": "26,90601",
+      "KoorX": "38,37044333",
       "hareket_metre": null,
       "hiz_kmh": null,
       "gps_lag": false,
       "trafik_kume": 0
     },
     {
-      "OtobusId": 12551,
-      "Yon": 0,
-      "KoorY": "27,06682333",
-      "KoorX": "38,39807333",
+      "OtobusId": 14012,
+      "Yon": 1,
+      "KoorY": "26,755355",
+      "KoorX": "38,32644833",
       "hareket_metre": null,
       "hiz_kmh": null,
       "gps_lag": false,
@@ -57,92 +37,37 @@
   "approaching": {
     "baslangic_gidis": [
       {
-        "KalanDurakSayisi": 16,
+        "KalanDurakSayisi": 14,
         "HattinYonu": 2,
-        "KoorY": "27,06682333",
+        "KoorY": "26,83946",
         "BisikletAparatliMi": false,
-        "KoorX": "38,39807333",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 12551
-      },
-      {
-        "KalanDurakSayisi": 16,
-        "HattinYonu": 2,
-        "KoorY": "26,944695",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,38581",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9564
-      },
-      {
-        "KalanDurakSayisi": 16,
-        "HattinYonu": 2,
-        "KoorY": "26,944695",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,38581",
+        "KoorX": "38,37018833",
         "EngelliMi": false,
         "HatNumarasi": 684,
         "HatAdi": "F.ALTAY - URLA (EKSPRES)",
         "OtobusId": 9563
       },
       {
-        "KalanDurakSayisi": 16,
+        "KalanDurakSayisi": 14,
         "HattinYonu": 2,
-        "KoorY": "27,06610667",
+        "KoorY": "26,83935",
         "BisikletAparatliMi": false,
-        "KoorX": "38,39793667",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 13087
-      },
-      {
-        "KalanDurakSayisi": 16,
-        "HattinYonu": 2,
-        "KoorY": "27,066185",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,39798833",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 13088
-      },
-      {
-        "KalanDurakSayisi": 16,
-        "HattinYonu": 2,
-        "KoorY": "27,06615167",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,39772833",
-        "EngelliMi": false,
-        "HatNumarasi": 684,
-        "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 13089
-      },
-      {
-        "KalanDurakSayisi": 16,
-        "HattinYonu": 2,
-        "KoorY": "26,944695",
-        "BisikletAparatliMi": false,
-        "KoorX": "38,38581",
+        "KoorX": "38,37018167",
         "EngelliMi": false,
         "HatNumarasi": 684,
         "HatAdi": "F.ALTAY - URLA (EKSPRES)",
         "OtobusId": 9565
       },
       {
-        "KalanDurakSayisi": 16,
+        "KalanDurakSayisi": 15,
         "HattinYonu": 2,
-        "KoorY": "26,90343667",
+        "KoorY": "27,06748667",
         "BisikletAparatliMi": false,
-        "KoorX": "38,370775",
+        "KoorX": "38,39734833",
         "EngelliMi": false,
         "HatNumarasi": 684,
         "HatAdi": "F.ALTAY - URLA (EKSPRES)",
-        "OtobusId": 9052
+        "OtobusId": 9564
       }
     ],
     "baslangic_donus": []
